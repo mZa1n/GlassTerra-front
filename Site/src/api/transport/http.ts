@@ -3,11 +3,13 @@ import {
   toCategory,
   toOrder,
   toProduct,
+  toReview,
   toUser,
   type CategoryDto,
   type OrderDto,
   type PaginatedDto,
   type ProductDto,
+  type ReviewDto,
   type UserDto,
 } from "@/api/dto";
 import { setToken } from "@/api/tokens";
@@ -79,6 +81,14 @@ export const httpBackend: Backend = {
         const product = byId.get(id);
         return product ? [product] : [];
       });
+    },
+
+    async getReviews(productId, signal) {
+      const dto = await request<ReviewDto[]>(`/products/${productId}/reviews`, {
+        signal,
+        anonymous: true,
+      });
+      return dto.map(toReview);
     },
 
     async suggest(query, limit, signal) {

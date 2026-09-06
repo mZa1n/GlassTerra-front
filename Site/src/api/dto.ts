@@ -1,4 +1,4 @@
-import type { Category, CategoryId, Order, Product, User } from "@/lib/types";
+import type { Category, CategoryId, Order, Product, Review, User } from "@/lib/types";
 
 /**
  * Wire shapes and their mappers.
@@ -24,6 +24,15 @@ export interface ProductDto {
   is_new?: boolean;
   description: string;
   specs?: Record<string, string> | null;
+  images?: string[] | null;
+}
+
+export interface ReviewDto {
+  id: string;
+  author_name: string;
+  rating: number;
+  created_at: string;
+  text: string;
 }
 
 export interface CategoryDto {
@@ -68,10 +77,19 @@ export const toProduct = (dto: ProductDto): Product => ({
   rating: dto.rating,
   reviews: dto.reviews_count,
   image: dto.image_url,
+  images: dto.images?.length ? dto.images : [dto.image_url],
   inStock: dto.in_stock,
   ...(dto.is_new ? { isNew: true } : {}),
   description: dto.description,
   specs: dto.specs ?? {},
+});
+
+export const toReview = (dto: ReviewDto): Review => ({
+  id: dto.id,
+  author: dto.author_name,
+  rating: dto.rating,
+  createdAt: dto.created_at,
+  text: dto.text,
 });
 
 export const toCategory = (dto: CategoryDto): Category => ({

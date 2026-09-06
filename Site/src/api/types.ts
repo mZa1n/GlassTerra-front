@@ -5,6 +5,7 @@ import type {
   Paginated,
   Product,
   ProductQuery,
+  Review,
   User,
 } from "@/lib/types";
 import type { StaticPageContent } from "@/data/content";
@@ -45,6 +46,7 @@ export interface Backend {
     /** Hydrates cart / favourites / comparison, which persist only ids. */
     getProductsByIds(ids: readonly number[], signal?: AbortSignal): Promise<Product[]>;
     suggest(query: string, limit: number, signal?: AbortSignal): Promise<Product[]>;
+    getReviews(productId: number, signal?: AbortSignal): Promise<Review[]>;
   };
 
   auth: {

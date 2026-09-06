@@ -14,8 +14,50 @@ const img = (id: string, w = 800) =>
 /** Product counts are derived by the catalog service, not stored here. */
 export type CategorySeed = Omit<Category, "productCount">;
 
-/** The category label is denormalised onto products at serve time. */
-export type ProductSeed = Omit<Product, "categoryName">;
+/** Label and gallery are composed at serve time. */
+export type ProductSeed = Omit<Product, "categoryName" | "images">;
+
+/**
+ * Extra shots per category. A real catalogue stores a gallery per product;
+ * until photography exists, every product borrows from its category.
+ */
+const GALLERY: Record<CategoryId, string[]> = {
+  glasses: [
+    "photo-1565256080583-df488fd02195",
+    "photo-1707340726386-611f5e9398f3",
+    "photo-1763196080531-f282d0d4e6c7",
+  ],
+  mugs: [
+    "photo-1669329606558-2dc9172d9f33",
+    "photo-1514228742587-6b1558fcca3d",
+    "photo-1762417582726-7a6ea816912e",
+  ],
+  bowls: [
+    "photo-1546069901-ba9599a7e63c",
+    "photo-1762417582726-7a6ea816912e",
+    "photo-1758445045680-bc7d505b16d2",
+  ],
+  pitchers: [
+    "photo-1620877138710-e086a5f24b46",
+    "photo-1763196080531-f282d0d4e6c7",
+    "photo-1758445045680-bc7d505b16d2",
+  ],
+  plates: [
+    "photo-1578775887804-699de7086ff9",
+    "photo-1762417582726-7a6ea816912e",
+    "photo-1546069901-ba9599a7e63c",
+  ],
+  teasets: [
+    "photo-1563362014-7781f7b4f0c7",
+    "photo-1669329606558-2dc9172d9f33",
+    "photo-1762417582726-7a6ea816912e",
+  ],
+  decor: [
+    "photo-1597696929736-6d13bed8e6a8",
+    "photo-1758445045680-bc7d505b16d2",
+    "photo-1763196080531-f282d0d4e6c7",
+  ],
+};
 
 export const CATEGORIES: readonly CategorySeed[] = [
   { id: "glasses", name: "Стаканы и стопки", image: img("photo-1565256080583-df488fd02195") },
@@ -237,7 +279,17 @@ const CATEGORY_NAMES = new Map<CategoryId, string>(
 export const categoryLabel = (id: CategoryId) => CATEGORY_NAMES.get(id) ?? id;
 
 /** Adds the fields the API is responsible for filling in. */
-export const toProduct = (seed: ProductSeed): Product => ({
-  ...seed,
-  categoryName: categoryLabel(seed.category),
-});
+export const toProduct = (seed: ProductSeed): Product => {
+  // Compare by photo id, not by URL: the same shot is requested at different
+  // widths for the grid and the gallery, so URL equality would let it through
+  // twice.
+  const extras = GALLERY[seed.category]
+    .filter((id) => !seed.image.includes(id))
+    .map((id) => img(id, 1200));
+
+  return {
+    ...seed,
+    categoryName: categoryLabel(seed.category),
+    images: [seed.image, ...extras],
+  };
+};

@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AuthProvider } from "@/context/AuthProvider";
 import { CatalogProvider } from "@/context/CatalogProvider";
 import { NavigationProvider, useNavigation } from "@/context/NavigationProvider";
+import { ProductDialogProvider } from "@/context/ProductDialogProvider";
 import { StoreProvider } from "@/context/StoreProvider";
 import { HomePage } from "@/pages/Home";
 import type { Page } from "@/lib/types";
@@ -95,11 +96,13 @@ export default function App() {
         <AuthProvider>
           <CatalogProvider>
             <StoreProvider>
-              <Toaster position="top-right" richColors closeButton />
-              {/* Last resort: keeps a crash outside <main> from blanking the page. */}
-              <ErrorBoundary>
-                <Shell />
-              </ErrorBoundary>
+              <ProductDialogProvider>
+                <Toaster position="top-right" richColors closeButton />
+                {/* Last resort: keeps a crash outside <main> from blanking the page. */}
+                <ErrorBoundary>
+                  <Shell />
+                </ErrorBoundary>
+              </ProductDialogProvider>
             </StoreProvider>
           </CatalogProvider>
         </AuthProvider>

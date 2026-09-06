@@ -51,11 +51,22 @@ export interface Product {
   rating: number;
   reviews: number;
   image: string;
+  /** Gallery for the product dialog; `image` is always the first entry. */
+  images: string[];
   inStock: boolean;
   isNew?: boolean;
   description: string;
   /** Rendered as rows in the comparison table; keys are reused across products. */
   specs: Record<string, string>;
+}
+
+export interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  /** ISO date. */
+  createdAt: string;
+  text: string;
 }
 
 export interface CartItem {

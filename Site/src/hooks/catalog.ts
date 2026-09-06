@@ -64,3 +64,14 @@ export function useSuggestions(query: string, limit = 5) {
     { enabled: trimmed.length > 0, keepPreviousData: false },
   );
 }
+
+export function useReviews(productId: number | null) {
+  return useQuery(
+    `reviews:${productId ?? "none"}`,
+    useCallback(
+      (signal) => api.catalog.getReviews(productId as number, signal),
+      [productId],
+    ),
+    { enabled: productId !== null },
+  );
+}

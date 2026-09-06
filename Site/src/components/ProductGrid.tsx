@@ -28,9 +28,7 @@ export function ProductGridSkeleton({ count = 8 }: { count?: number }) {
         <div key={index} className="space-y-3">
           <Skeleton className="aspect-[4/5] w-full rounded-lg" />
           <Skeleton className="h-4 w-4/5" />
-          <Skeleton className="h-3 w-1/3" />
           <Skeleton className="h-5 w-24" />
-          <Skeleton className="h-9 w-full" />
         </div>
       ))}
     </div>

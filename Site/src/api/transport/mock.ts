@@ -2,6 +2,7 @@ import { ApiError } from "@/api/errors";
 import type { Backend, CartLine, Credentials, RegisterInput, Session } from "@/api/types";
 import { CATEGORIES, PRODUCTS, toProduct } from "@/data/products";
 import { STATIC_PAGES } from "@/data/content";
+import { reviewsFor } from "@/data/reviews";
 import { matchesFilter, searchProducts, sortProducts } from "@/lib/catalog";
 import { env } from "@/lib/env";
 import type {
@@ -138,6 +139,14 @@ export const mockBackend: Backend = {
       await delay(signal);
       // Preserve the caller's order — it is the order the user added them in.
       return ids.flatMap((id) => ALL_PRODUCTS.filter((product) => product.id === id));
+    },
+
+    async getReviews(productId, signal) {
+      await delay(signal);
+      if (!ALL_PRODUCTS.some((product) => product.id === productId)) {
+        throw new ApiError("Товар не найден", 404, "not_found");
+      }
+      return reviewsFor(productId);
     },
 
     async suggest(query, limit, signal) {

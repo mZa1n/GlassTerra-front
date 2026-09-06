@@ -14,13 +14,13 @@ export function useProductActions() {
   const { navigate } = useNavigation();
 
   const add = useCallback(
-    (product: Product) => {
+    (product: Product, quantity = 1) => {
       if (!product.inStock) {
         toast.error("Товара нет в наличии");
         return;
       }
 
-      addToCart(product);
+      addToCart(product, quantity);
       toast.success(`${product.name} — в корзине`, {
         action: { label: "Перейти", onClick: () => navigate("cart") },
       });
