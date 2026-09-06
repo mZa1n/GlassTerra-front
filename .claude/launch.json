@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "glassterra",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "Site", "run", "dev"],
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

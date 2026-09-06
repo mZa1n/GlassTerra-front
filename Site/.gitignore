@@ -1,0 +1,8 @@
+node_modules
+build
+dist
+.DS_Store
+*.local
+
+# Full-resolution source art, not shipped
+src/assets/*-source.*
