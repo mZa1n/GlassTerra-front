@@ -3,9 +3,7 @@ import { ArrowLeftRight, Heart, ShoppingCart } from "lucide-react";
 import { Highlight } from "@/components/Highlight";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Rating } from "@/components/Rating";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/components/ui/utils";
 import { useStore } from "@/context/StoreProvider";
 import { useProductActions } from "@/hooks/useProductActions";
@@ -18,7 +16,13 @@ interface ProductCardProps {
   highlight?: string;
 }
 
-/** The one product card used by every grid in the app. */
+/**
+ * The one product card used by every grid.
+ *
+ * Reading order is name → price → rating: the title is what a shopper scans
+ * for, so nothing secondary sits above it. The add button stays neutral until
+ * hover, which keeps a grid of cards from turning into a wall of accent colour.
+ */
 export const ProductCard = memo(function ProductCard({ product, highlight }: ProductCardProps) {
   const { isFavorite, isCompared } = useStore();
   const { add, favorite, compare } = useProductActions();
@@ -27,60 +31,61 @@ export const ProductCard = memo(function ProductCard({ product, highlight }: Pro
   const compared = isCompared(product.id);
 
   return (
-    <Card className="group gap-0 overflow-hidden py-0 transition-shadow duration-300 hover:shadow-xl">
-      <div className="relative aspect-square overflow-hidden bg-muted">
+    <article className="group flex flex-col">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-muted">
         <ImageWithFallback
           src={product.image}
           alt={product.name}
-          className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="size-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
         />
 
-        <div className="absolute top-3 left-3 flex flex-col items-start gap-2">
+        <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
           {product.oldPrice && (
-            <Badge variant="destructive">−{discountPercent(product.price, product.oldPrice)}%</Badge>
+            <span className="rounded bg-destructive px-2 py-0.5 text-xs text-destructive-foreground">
+              −{discountPercent(product.price, product.oldPrice)}%
+            </span>
           )}
-          {product.isNew && <Badge className="bg-emerald-600 text-white">Новинка</Badge>}
+          {product.isNew && (
+            <span className="rounded bg-foreground/85 px-2 py-0.5 text-xs text-background">
+              Новинка
+            </span>
+          )}
         </div>
 
         <Button
           type="button"
           size="icon"
-          variant="secondary"
+          variant="ghost"
           aria-pressed={favorited}
           aria-label={favorited ? "Удалить из избранного" : "Добавить в избранное"}
           onClick={() => favorite(product)}
           className={cn(
-            "absolute top-3 right-3 rounded-full shadow-sm transition-opacity",
-            "focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100",
+            "absolute top-2 right-2 size-9 rounded-full bg-card/80 backdrop-blur-sm hover:bg-card",
+            "transition-opacity focus-visible:opacity-100 md:opacity-0 md:group-hover:opacity-100",
             favorited && "opacity-100",
           )}
         >
-          <Heart className={cn("size-4", favorited && "fill-red-500 text-red-500")} />
+          <Heart className={cn("size-4", favorited && "fill-destructive text-destructive")} />
         </Button>
 
         {!product.inStock && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/55">
-            <Badge variant="destructive" className="px-3 py-1 text-sm">
-              Нет в наличии
-            </Badge>
+          <div className="absolute inset-x-0 bottom-0 bg-background/90 py-2 text-center text-xs">
+            Нет в наличии
           </div>
         )}
       </div>
 
-      <CardContent className="flex flex-1 flex-col gap-3 p-4">
-        <Rating value={product.rating} reviews={product.reviews} />
+      <div className="flex flex-1 flex-col gap-1.5 pt-3">
+        <h3 className="line-clamp-2 text-[0.9375rem] leading-snug font-medium">
+          <Highlight text={product.name} query={highlight} />
+        </h3>
 
-        <div className="space-y-1">
-          <p className="text-xs text-muted-foreground">
-            <Highlight text={product.categoryName} query={highlight} />
-          </p>
-          <h3 className="line-clamp-2 min-h-[2.75rem] text-foreground">
-            <Highlight text={product.name} query={highlight} />
-          </h3>
-        </div>
+        <p className="text-xs text-muted-foreground">
+          <Highlight text={product.categoryName} query={highlight} />
+        </p>
 
-        <div className="mt-auto flex items-baseline gap-2">
-          <span className="text-lg text-foreground">{formatPrice(product.price)}</span>
+        <div className="flex items-baseline gap-2 pt-0.5">
+          <span className="font-semibold">{formatPrice(product.price)}</span>
           {product.oldPrice && (
             <span className="text-sm text-muted-foreground line-through">
               {formatPrice(product.oldPrice)}
@@ -88,10 +93,13 @@ export const ProductCard = memo(function ProductCard({ product, highlight }: Pro
           )}
         </div>
 
-        <div className="flex gap-2">
+        <Rating value={product.rating} reviews={product.reviews} className="pt-0.5" />
+
+        <div className="mt-auto flex gap-2 pt-3">
           <Button
             type="button"
-            className="flex-1"
+            variant="outline"
+            className="flex-1 hover:border-primary hover:bg-primary hover:text-primary-foreground"
             disabled={!product.inStock}
             onClick={() => add(product)}
           >
@@ -101,15 +109,16 @@ export const ProductCard = memo(function ProductCard({ product, highlight }: Pro
           <Button
             type="button"
             size="icon"
-            variant={compared ? "default" : "secondary"}
+            variant={compared ? "default" : "ghost"}
             aria-pressed={compared}
             aria-label={compared ? "Убрать из сравнения" : "Добавить к сравнению"}
             onClick={() => compare(product)}
+            className={cn(!compared && "text-muted-foreground hover:text-foreground")}
           >
             <ArrowLeftRight className="size-4" />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
 });

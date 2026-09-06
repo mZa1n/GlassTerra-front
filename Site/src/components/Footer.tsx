@@ -40,7 +40,7 @@ function FooterNav({ title, links }: { title: string; links: readonly FooterLink
 
   return (
     <div>
-      <h3 className="mb-4 text-white">{title}</h3>
+      <h3 className="mb-4 text-sm tracking-wide uppercase opacity-60">{title}</h3>
       <ul className="space-y-2 text-sm">
         {links.map((link) => (
           <li key={link.label}>
@@ -50,7 +50,7 @@ function FooterNav({ title, links }: { title: string; links: readonly FooterLink
                 if (link.filter) setFilter(link.filter);
                 navigate(link.page);
               }}
-              className="text-left text-slate-400 transition-colors hover:text-white"
+              className="text-left opacity-70 transition-opacity hover:opacity-100"
             >
               {link.label}
             </button>
@@ -65,14 +65,14 @@ export function Footer() {
   const { navigate } = useNavigation();
 
   return (
-    <footer className="mt-16 border-t border-white/10 bg-slate-900 text-white dark:bg-slate-950">
+    <footer className="mt-20 bg-surface-strong text-surface-strong-foreground">
       <div className="mx-auto max-w-[1400px] px-4 py-12 md:px-6">
         <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <div className="mb-4 flex items-center gap-3 [&_span]:text-white">
+            <div className="mb-4 flex items-center gap-3">
               <Logo />
             </div>
-            <p className="text-sm leading-relaxed text-slate-400">
+            <p className="text-sm leading-relaxed opacity-70">
               Стеклянная и керамическая посуда для дома. Качество и стиль в каждом изделии.
             </p>
           </div>
@@ -81,17 +81,17 @@ export function Footer() {
           <FooterNav title="О компании" links={COMPANY_LINKS} />
 
           <div>
-            <h3 className="mb-4 text-white">Контакты</h3>
-            <ul className="space-y-3 text-sm text-slate-400">
+            <h3 className="mb-4 text-sm tracking-wide uppercase opacity-60">Контакты</h3>
+            <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-3">
                 <Phone className="mt-0.5 size-4 shrink-0" />
-                <a href={SHOP.phoneHref} className="transition-colors hover:text-white">
+                <a href={SHOP.phoneHref} className="opacity-70 transition-opacity hover:opacity-100">
                   {SHOP.phone}
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="mt-0.5 size-4 shrink-0" />
-                <a href={`mailto:${SHOP.email}`} className="transition-colors hover:text-white">
+                <a href={`mailto:${SHOP.email}`} className="opacity-70 transition-opacity hover:opacity-100">
                   {SHOP.email}
                 </a>
               </li>
@@ -100,7 +100,7 @@ export function Footer() {
                 <button
                   type="button"
                   onClick={() => navigate("contacts")}
-                  className="text-left transition-colors hover:text-white"
+                  className="text-left opacity-70 transition-opacity hover:opacity-100"
                 >
                   {SHOP.address}
                 </button>
@@ -114,7 +114,7 @@ export function Footer() {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-lg bg-slate-800 px-3 py-1.5 text-slate-300 transition-colors hover:bg-primary hover:text-white"
+                    className="rounded border border-current/20 px-3 py-1.5 opacity-80 transition-opacity hover:opacity-100"
                   >
                     {item.label}
                   </a>
@@ -124,9 +124,9 @@ export function Footer() {
           </div>
         </div>
 
-        <Separator className="bg-slate-700" />
+        <Separator className="bg-current/15" />
 
-        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-sm text-slate-400 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 pt-8 text-sm opacity-70 md:flex-row">
           <p>
             © {new Date().getFullYear()} {SHOP.name}. Все права защищены.
           </p>
@@ -136,7 +136,7 @@ export function Footer() {
                 key={link.page}
                 type="button"
                 onClick={() => navigate(link.page)}
-                className="transition-colors hover:text-white"
+                className="opacity-70 transition-opacity hover:opacity-100"
               >
                 {link.label}
               </button>

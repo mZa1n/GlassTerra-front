@@ -67,11 +67,11 @@ function Shell() {
   const Screen = SCREENS[page];
 
   return (
-    <div className="flex min-h-screen flex-col bg-linear-to-br from-slate-50 to-blue-50 dark:from-slate-950 dark:to-slate-900">
+    <div className="flex min-h-screen flex-col bg-background">
       <Header onOpenMenu={() => setMenuOpen(true)} />
       <SidebarSheet open={menuOpen} onOpenChange={setMenuOpen} />
 
-      <div className="mx-auto flex w-full max-w-[1400px] flex-1 gap-4 p-3 md:gap-6 md:p-6">
+      <div className="mx-auto flex w-full max-w-[1400px] flex-1 gap-8 px-4 py-8 md:px-6 md:py-10">
         {WITH_SIDEBAR.has(page) && <SidebarRail />}
         <main id="content" className="min-w-0 flex-1">
           {/* Remount on navigation so a crashed screen recovers by leaving it. */}

@@ -44,8 +44,8 @@ export function CategoryNav({ onSelect }: CategoryNavProps) {
     cn(
       "flex w-full items-center justify-between gap-2 px-4 py-2.5 text-left text-sm transition-colors",
       sameFilter(filter, target)
-        ? "bg-primary text-primary-foreground"
-        : cn("text-foreground hover:bg-accent", extra),
+        ? "bg-accent font-medium text-accent-foreground"
+        : cn("text-muted-foreground hover:bg-accent/60 hover:text-foreground", extra),
     );
 
   const renderCount = (target: CatalogFilter) => {

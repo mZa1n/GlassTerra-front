@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import type { IconComponent } from "@/lib/icon";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface PageHeaderProps {
   title: string;
@@ -9,19 +8,21 @@ interface PageHeaderProps {
   actions?: ReactNode;
 }
 
+/**
+ * Page title block. Deliberately not a card — stacking a bordered box around
+ * every heading made each screen read as a form rather than a shop.
+ */
 export function PageHeader({ title, description, icon: Icon, actions }: PageHeaderProps) {
   return (
-    <Card>
-      <CardContent className="flex flex-wrap items-center justify-between gap-4 px-4 py-5 md:px-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-3">
-            {Icon && <Icon className="size-6 text-primary" />}
-            <h1 className="text-xl text-foreground md:text-2xl">{title}</h1>
-          </div>
-          {description && <p className="text-sm text-muted-foreground">{description}</p>}
+    <div className="flex flex-wrap items-end justify-between gap-4 border-b pb-4">
+      <div className="space-y-1">
+        <div className="flex items-center gap-2.5">
+          {Icon && <Icon className="size-5 text-muted-foreground" />}
+          <h1 className="text-2xl md:text-3xl">{title}</h1>
         </div>
-        {actions}
-      </CardContent>
-    </Card>
+        {description && <p className="text-sm text-muted-foreground">{description}</p>}
+      </div>
+      {actions}
+    </div>
   );
 }

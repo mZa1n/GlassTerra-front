@@ -31,7 +31,7 @@ export function CartSummary({
           </div>
           <div className="flex justify-between text-muted-foreground">
             <span>Доставка</span>
-            <span className={deliveryIsFree ? "text-emerald-600" : undefined}>
+            <span className={deliveryIsFree ? "text-success" : undefined}>
               {deliveryIsFree ? "Бесплатно" : "По тарифу"}
             </span>
           </div>

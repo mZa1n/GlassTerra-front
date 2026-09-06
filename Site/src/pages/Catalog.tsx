@@ -5,7 +5,6 @@ import { PageHeader } from "@/components/PageHeader";
 import { ProductGrid, ProductGridSkeleton } from "@/components/ProductGrid";
 import { QueryState } from "@/components/QueryState";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -71,9 +70,9 @@ export function CatalogPage() {
         }
       />
 
-      <Card>
-        <CardContent className="p-3 md:p-4">
-          <div className="scrollbar-hide touch-pan-x overscroll-x-contain flex gap-2 overflow-x-auto">
+      {/* Below lg the category rail is hidden, so filters live here instead. */}
+      <div className="lg:hidden">
+        <div className="scrollbar-hide touch-pan-x overscroll-x-contain -mx-3 flex gap-2 overflow-x-auto px-3">
             {categories.isLoading
               ? Array.from({ length: 6 }, (_, index) => (
                   <Skeleton key={index} className="h-9 w-28 shrink-0 rounded-lg" />
@@ -98,9 +97,8 @@ export function CatalogPage() {
                     </button>
                   );
                 })}
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       <QueryState
         status={products.status}

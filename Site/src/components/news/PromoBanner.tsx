@@ -1,55 +1,55 @@
 import type { ReactNode } from "react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { cn } from "@/components/ui/utils";
-import type { IconComponent } from "@/lib/icon";
 
 interface PromoBannerProps {
-  /** Tailwind gradient classes, e.g. "from-blue-600 to-blue-800". */
-  gradient: string;
-  badgeIcon: IconComponent;
-  badgeLabel: string;
+  eyebrow: string;
   title: string;
   description: string;
-  image?: string;
+  image: string;
+  /** Taller treatment for the lead banner. */
+  size?: "lead" | "tile";
   className?: string;
   children?: ReactNode;
 }
 
-/** Shared shell for the three promo blocks on the news page. */
+/**
+ * Photo-led promo block. Every banner is the same shape — a photograph with a
+ * legibility scrim — instead of the assorted coloured gradients it replaces,
+ * which introduced four accent hues the palette does not have.
+ */
 export function PromoBanner({
-  gradient,
-  badgeIcon: BadgeIcon,
-  badgeLabel,
+  eyebrow,
   title,
   description,
   image,
+  size = "tile",
   className,
   children,
 }: PromoBannerProps) {
-  return (
-    <section
-      className={cn(
-        "relative overflow-hidden rounded-xl bg-linear-to-br text-white shadow-lg",
-        gradient,
-        className,
-      )}
-    >
-      {image && (
-        <ImageWithFallback
-          src={image}
-          alt=""
-          className="absolute inset-0 size-full object-cover opacity-20"
-        />
-      )}
+  const isLead = size === "lead";
 
-      <div className="relative space-y-4 p-6 md:p-8">
-        <p className="inline-flex w-fit items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-sm backdrop-blur-sm">
-          <BadgeIcon className="size-4" />
-          {badgeLabel}
-        </p>
-        <h2 className="text-2xl text-white md:text-3xl">{title}</h2>
-        <p className="text-sm text-white/85 md:text-base">{description}</p>
-        {children}
+  return (
+    <section className={cn("relative overflow-hidden rounded-lg", className)}>
+      <ImageWithFallback
+        src={image}
+        alt=""
+        className={cn("w-full object-cover", isLead ? "h-[20rem] md:h-[24rem]" : "h-[17rem]")}
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-black/20" />
+
+      <div
+        className={cn(
+          "absolute inset-0 flex flex-col justify-end gap-3 p-6",
+          isLead && "justify-center md:max-w-lg md:p-10",
+        )}
+      >
+        <p className="text-xs tracking-[0.18em] text-white/70 uppercase">{eyebrow}</p>
+        <h2 className={cn("text-white", isLead ? "text-3xl md:text-4xl" : "text-xl md:text-2xl")}>
+          {title}
+        </h2>
+        <p className="text-sm text-white/80">{description}</p>
+        {children && <div className="flex flex-wrap gap-3 pt-1">{children}</div>}
       </div>
     </section>
   );

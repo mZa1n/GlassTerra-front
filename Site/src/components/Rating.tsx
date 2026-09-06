@@ -17,12 +17,12 @@ export function Rating({ value, reviews, className }: RatingProps) {
           key={index}
           aria-hidden
           className={cn(
-            "size-4",
-            index < filled ? "fill-amber-400 text-amber-400" : "text-slate-300 dark:text-slate-600",
+            "size-3.5",
+            index < filled ? "fill-foreground/70 text-foreground/70" : "text-border",
           )}
         />
       ))}
-      <span className="ml-1 text-sm text-muted-foreground">
+      <span className="ml-1 text-xs text-muted-foreground">
         {value.toFixed(1)}
         {reviews !== undefined && ` · ${reviews}`}
       </span>

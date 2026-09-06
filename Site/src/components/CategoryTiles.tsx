@@ -1,10 +1,9 @@
-import { ArrowRight } from "lucide-react";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { Skeleton } from "@/components/ui/skeleton";
 import { plural } from "@/lib/format";
 import type { Category, CategoryId } from "@/lib/types";
 
-const GRID = "grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-3";
+const GRID = "grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 xl:grid-cols-4";
 
 interface CategoryTilesProps {
   categories: readonly Category[];
@@ -19,44 +18,36 @@ export function CategoryTiles({ categories, onSelect }: CategoryTilesProps) {
           key={category.id}
           type="button"
           onClick={() => onSelect(category.id)}
-          className="group overflow-hidden rounded-lg border bg-secondary text-left transition-all duration-300 hover:border-primary/40 hover:shadow-lg"
+          className="group text-left"
         >
-          <div className="relative aspect-4/3 overflow-hidden bg-background">
+          <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
             <ImageWithFallback
               src={category.image}
               alt=""
-              className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+              className="size-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
             />
           </div>
-          <div className="p-3 md:p-4">
-            <h3 className="text-foreground transition-colors group-hover:text-primary">
-              {category.name}
-            </h3>
-            <p className="mb-3 text-sm text-muted-foreground">
-              {category.productCount}{" "}
-              {plural(category.productCount, { one: "товар", few: "товара", many: "товаров" })}
-            </p>
-            <span className="flex items-center gap-2 text-sm text-primary transition-all group-hover:gap-3">
-              Смотреть товары
-              <ArrowRight className="size-4" />
-            </span>
-          </div>
+          <h3 className="mt-3 text-[0.9375rem] font-medium transition-colors group-hover:text-primary">
+            {category.name}
+          </h3>
+          <p className="text-xs text-muted-foreground">
+            {category.productCount}{" "}
+            {plural(category.productCount, { one: "товар", few: "товара", many: "товаров" })}
+          </p>
         </button>
       ))}
     </div>
   );
 }
 
-export function CategoryTilesSkeleton({ count = 6 }: { count?: number }) {
+export function CategoryTilesSkeleton({ count = 8 }: { count?: number }) {
   return (
     <div className={GRID} aria-hidden>
       {Array.from({ length: count }, (_, index) => (
-        <div key={index} className="overflow-hidden rounded-lg border">
-          <Skeleton className="aspect-4/3 w-full rounded-none" />
-          <div className="space-y-2 p-4">
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-3 w-20" />
-          </div>
+        <div key={index} className="space-y-3">
+          <Skeleton className="aspect-square w-full rounded-lg" />
+          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-3 w-1/3" />
         </div>
       ))}
     </div>

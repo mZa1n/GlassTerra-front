@@ -110,7 +110,7 @@ export function ComparisonTable({ products, onRemove, onAddToCart }: ComparisonT
                 key={product.id}
                 className={cn(
                   "text-center",
-                  product.inStock ? "text-emerald-600" : "text-destructive",
+                  product.inStock ? "text-success" : "text-destructive",
                 )}
               >
                 {product.inStock ? "В наличии" : "Нет в наличии"}
