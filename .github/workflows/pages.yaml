@@ -30,15 +30,17 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install dependencies
+        working-directory: Site
         run: npm install
 
       - name: Build site
+        working-directory: Site
         run: npm run build -- --base="${{ steps.pages.outputs.base_path }}/"
 
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: build
+          path: Site/build
 
   deploy:
     runs-on: ubuntu-latest
