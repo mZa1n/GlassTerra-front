@@ -1,39 +1,35 @@
 /** Every routable screen in the app. Single source of truth for navigation. */
-export type Page =
-  | "home"
-  | "catalog"
-  | "news"
-  | "new-arrivals"
-  | "delivery"
-  | "returns"
-  | "contacts"
-  | "about"
-  | "vacancies"
-  | "partners"
-  | "privacy"
-  | "terms"
-  | "cart"
-  | "profile"
-  | "favorites"
-  | "comparison"
-  | "search";
-
-export const CATEGORY_IDS = [
-  "glasses",
-  "mugs",
-  "bowls",
-  "pitchers",
-  "plates",
-  "teasets",
-  "decor",
+export const PAGES = [
+  "home",
+  "catalog",
+  "news",
+  "new-arrivals",
+  "delivery",
+  "returns",
+  "contacts",
+  "about",
+  "vacancies",
+  "partners",
+  "privacy",
+  "terms",
+  "cart",
+  "profile",
+  "favorites",
+  "comparison",
+  "search",
+  "admin",
 ] as const;
 
-export type CategoryId = (typeof CATEGORY_IDS)[number];
+export type Page = (typeof PAGES)[number];
+
+export type CategoryId = string;
 
 export interface Category {
   id: CategoryId;
   name: string;
   image: string;
+  /** Sidebar grouping, e.g. "Посуда из стекла". Ungrouped ones fall to the end. */
+  group?: string;
   /** Filled by the catalog service; the client never counts products itself. */
   productCount: number;
 }
@@ -74,17 +70,46 @@ export interface CartItem {
   quantity: number;
 }
 
+/** Authorisation is a property of the account, never of the identity provider. */
+export type UserRole = "user" | "admin";
+
 export interface User {
   id: string;
   name: string;
   email: string;
   phone: string;
   address: string;
+  role: UserRole;
+}
+
+/**
+ * A promo banner or a short note on the news page. Editable in the admin
+ * panel, which is why the news screen renders from this rather than from
+ * literals in the component.
+ */
+export type ArticleKind = "promo" | "note";
+
+export interface Article {
+  id: string;
+  kind: ArticleKind;
+  /** Small caps line above the title, e.g. "Акция · до 40%". */
+  eyebrow: string;
+  title: string;
+  text: string;
+  /** Promo banners only; a note is text. */
+  image: string;
+  ctaLabel: string;
+  /** "page:<page>" or "filter:<filterKey>" — empty means no button. */
+  ctaTarget: string;
+  /** The one promo shown as the lead banner. */
+  featured: boolean;
+  published: boolean;
+  sortOrder: number;
 }
 
 /**
  * What the catalog is narrowed down to. A tagged union rather than a bare
- * string, so a filter can never point at a category that does not exist.
+ * string, so "new" and "sale" can never be confused with a category slug.
  */
 export type CatalogFilter =
   | { kind: "all" }

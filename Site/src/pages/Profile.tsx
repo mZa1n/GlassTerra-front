@@ -1,5 +1,15 @@
 import { useState } from "react";
-import { Heart, LogOut, Mail, MapPin, Pencil, Phone, ShoppingCart, User } from "lucide-react";
+import {
+  Heart,
+  LogOut,
+  Mail,
+  MapPin,
+  Pencil,
+  Phone,
+  ShieldCheck,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/PageHeader";
 import { ThemeSetting } from "@/components/ThemeSetting";
@@ -58,6 +68,16 @@ export function ProfilePage() {
       text: `Товаров в корзине: ${cartCount}`,
       page: "cart",
     },
+    ...(user.role === "admin"
+      ? [
+          {
+            icon: ShieldCheck,
+            title: "Панель управления",
+            text: "Товары, категории и витрина магазина",
+            page: "admin" as Page,
+          },
+        ]
+      : []),
   ];
 
   return (

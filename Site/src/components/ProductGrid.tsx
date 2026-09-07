@@ -13,8 +13,15 @@ interface ProductGridProps {
 export function ProductGrid({ products, highlight }: ProductGridProps) {
   return (
     <div className={GRID}>
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} highlight={highlight} />
+      {products.map((product, index) => (
+        <div
+          key={product.id}
+          // Capped: past the first screenful the delay only makes the grid feel slow.
+          style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}
+          className="animate-in fade-in slide-in-from-bottom-3 fill-mode-both duration-500"
+        >
+          <ProductCard product={product} highlight={highlight} />
+        </div>
       ))}
     </div>
   );

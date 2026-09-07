@@ -29,8 +29,8 @@ export const ProductCard = memo(function ProductCard({ product, highlight }: Pro
   const favorited = isFavorite(product.id);
 
   return (
-    <article className="group relative">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-muted">
+    <article className="group relative transition-transform duration-300 hover:-translate-y-1">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-muted shadow-sm transition-shadow duration-300 group-hover:shadow-lg">
         <ImageWithFallback
           src={product.image}
           alt={product.name}
@@ -57,7 +57,7 @@ export const ProductCard = memo(function ProductCard({ product, highlight }: Pro
         )}
       </div>
 
-      <h3 className="mt-3 line-clamp-2 text-[0.9375rem] leading-snug font-medium">
+      <h3 className="mt-3 line-clamp-2 text-[0.9375rem] leading-snug font-medium transition-colors group-hover:text-primary">
         {/* Stretched link: the whole card is the target, the heart sits above it. */}
         <button type="button" onClick={() => openProduct(product)} className="text-left after:absolute after:inset-0 after:content-['']">
           <Highlight text={product.name} query={highlight} />

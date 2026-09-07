@@ -18,4 +18,15 @@ if (env.isDev) {
 }
 
 export { ApiError, messageFor } from "@/api/errors";
-export type { Backend, CartLine, Credentials, RegisterInput, Session } from "@/api/types";
+export type {
+  ArticleInput,
+  Backend,
+  CartLine,
+  CategoryInput,
+  Credentials,
+  PageSummary,
+  ProductInput,
+  RegisterInput,
+  Session,
+  UserPatch,
+} from "@/api/types";

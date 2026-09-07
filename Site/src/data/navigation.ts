@@ -22,42 +22,18 @@ export interface SidebarLeaf {
   highlight?: boolean;
 }
 
-export interface SidebarGroup {
-  label: string;
-  children: readonly SidebarLeaf[];
-}
-
 /**
- * Every entry resolves to a CatalogFilter, so the sidebar cannot point at a
- * category the catalog does not know about.
+ * Every entry resolves to a CatalogFilter, so a shortcut cannot point at a
+ * category the catalog does not know about. Categories themselves are not
+ * listed here — they come from the API, because the admin panel creates them.
  */
 export const SIDEBAR_SHORTCUTS: readonly SidebarLeaf[] = [
   { label: "Новинки", filter: { kind: "new" }, highlight: true },
   { label: "Товары со скидкой", filter: { kind: "sale" }, highlight: true },
 ];
 
-export const SIDEBAR_GROUPS: readonly SidebarGroup[] = [
-  {
-    label: "Посуда из стекла",
-    children: [
-      { label: "Стаканы и стопки", filter: { kind: "category", id: "glasses" } },
-      { label: "Тарелки", filter: { kind: "category", id: "plates" } },
-      { label: "Салатники", filter: { kind: "category", id: "bowls" } },
-      { label: "Кувшины и графины", filter: { kind: "category", id: "pitchers" } },
-    ],
-  },
-  {
-    label: "Фарфор и керамика",
-    children: [
-      { label: "Чайные сервизы", filter: { kind: "category", id: "teasets" } },
-      { label: "Чашки и кружки", filter: { kind: "category", id: "mugs" } },
-    ],
-  },
-  {
-    label: "Интерьер",
-    children: [{ label: "Декор и вазы", filter: { kind: "category", id: "decor" } }],
-  },
-];
+/** Categories with no group of their own are collected under this heading. */
+export const UNGROUPED_LABEL = "Другое";
 
 export const sameFilter = (a: CatalogFilter, b: CatalogFilter) =>
   a.kind === b.kind && (a.kind !== "category" || b.kind !== "category" || a.id === b.id);

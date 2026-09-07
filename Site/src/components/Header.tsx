@@ -1,4 +1,4 @@
-import { ArrowLeftRight, Heart, Menu, ShoppingCart, User } from "lucide-react";
+import { ArrowLeftRight, Heart, Menu, ShieldCheck, ShoppingCart, User } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { SearchAutocomplete } from "@/components/SearchAutocomplete";
 import { Button } from "@/components/ui/button";
@@ -91,6 +91,9 @@ export function Header({ onOpenMenu }: { onOpenMenu: () => void }) {
               />
             )}
             <Action label="Корзина" page="cart" icon={ShoppingCart} count={cartCount} />
+            {user?.role === "admin" && (
+              <Action label="Панель управления" page="admin" icon={ShieldCheck} />
+            )}
 
             <Button
               type="button"

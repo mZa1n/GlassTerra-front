@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { PackageSearch } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
@@ -31,6 +31,14 @@ export function CatalogPage() {
   const { filter, setFilter, sort, setSort } = useCatalog();
   const categories = useCategories();
   const products = useProducts({ filter, sort });
+
+  // CategoryId is a plain string now, so nothing stops a filter from naming a
+  // category the admin has since deleted. Fall back rather than leave the
+  // catalogue permanently empty.
+  useEffect(() => {
+    if (filter.kind !== "category" || !categories.data) return;
+    if (!categories.data.some((category) => category.id === filter.id)) setFilter({ kind: "all" });
+  }, [filter, categories.data, setFilter]);
 
   const chips = useMemo(
     () => [

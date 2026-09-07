@@ -1,10 +1,16 @@
 import { request } from "@/api/http";
 import {
+  fromArticleInput,
+  fromCategoryInput,
+  fromProductInput,
+  fromUserPatch,
+  toArticle,
   toCategory,
   toOrder,
   toProduct,
   toReview,
   toUser,
+  type ArticleDto,
   type CategoryDto,
   type OrderDto,
   type PaginatedDto,
@@ -13,7 +19,7 @@ import {
   type UserDto,
 } from "@/api/dto";
 import { setToken } from "@/api/tokens";
-import type { Backend, CartLine, Session } from "@/api/types";
+import type { Backend, CartLine, PageSummary, Session } from "@/api/types";
 import { filterKey } from "@/lib/catalog";
 import type { StaticPageContent } from "@/data/content";
 
@@ -193,11 +199,122 @@ export const httpBackend: Backend = {
   },
 
   content: {
+    async listArticles(signal) {
+      const dto = await request<ArticleDto[]>("/articles", { signal, anonymous: true });
+      return dto.map(toArticle);
+    },
+
     async getPage(slug, signal) {
       return request<StaticPageContent | null>(`/pages/${encodeURIComponent(slug)}`, {
         signal,
         anonymous: true,
       });
+    },
+  },
+
+  admin: {
+    async createProduct(input, signal) {
+      const dto = await request<ProductDto>("/admin/products", {
+        method: "POST",
+        body: fromProductInput(input),
+        signal,
+      });
+      return toProduct(dto);
+    },
+
+    async updateProduct(id, patch, signal) {
+      const dto = await request<ProductDto>(`/admin/products/${id}`, {
+        method: "PATCH",
+        body: fromProductInput(patch),
+        signal,
+      });
+      return toProduct(dto);
+    },
+
+    async deleteProduct(id, signal) {
+      await request<void>(`/admin/products/${id}`, { method: "DELETE", signal });
+    },
+
+    async createCategory(input, signal) {
+      const dto = await request<CategoryDto>("/admin/categories", {
+        method: "POST",
+        body: fromCategoryInput(input),
+        signal,
+      });
+      return toCategory(dto);
+    },
+
+    async updateCategory(id, patch, signal) {
+      const dto = await request<CategoryDto>(`/admin/categories/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        body: fromCategoryInput(patch),
+        signal,
+      });
+      return toCategory(dto);
+    },
+
+    async deleteCategory(id, moveTo, signal) {
+      await request<void>(`/admin/categories/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        params: { move_to: moveTo },
+        signal,
+      });
+    },
+
+    async listArticles(signal) {
+      const dto = await request<ArticleDto[]>("/admin/articles", { signal });
+      return dto.map(toArticle);
+    },
+
+    async createArticle(input, signal) {
+      const dto = await request<ArticleDto>("/admin/articles", {
+        method: "POST",
+        body: fromArticleInput(input),
+        signal,
+      });
+      return toArticle(dto);
+    },
+
+    async updateArticle(id, patch, signal) {
+      const dto = await request<ArticleDto>(`/admin/articles/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        body: fromArticleInput(patch),
+        signal,
+      });
+      return toArticle(dto);
+    },
+
+    async deleteArticle(id, signal) {
+      await request<void>(`/admin/articles/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        signal,
+      });
+    },
+
+    async listPages(signal) {
+      return request<PageSummary[]>("/admin/pages", { signal });
+    },
+
+    async updatePage(slug, content, signal) {
+      return request<StaticPageContent>(`/admin/pages/${encodeURIComponent(slug)}`, {
+        method: "PUT",
+        body: content,
+        signal,
+      });
+    },
+
+    async listUsers(signal) {
+      const dto = await request<UserDto[]>("/admin/users", { signal });
+      return dto.map(toUser);
+    },
+
+    async updateUser(id, patch, signal) {
+      const dto = await request<UserDto>(`/admin/users/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        body: fromUserPatch(patch),
+        signal,
+      });
+      return toUser(dto);
     },
   },
 };

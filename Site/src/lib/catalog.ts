@@ -47,6 +47,20 @@ export const POPULAR_SEARCHES = ["Стакан", "Кружка", "Салатни
 export const filterKey = (filter: CatalogFilter) =>
   filter.kind === "category" ? `category:${filter.id}` : filter.kind;
 
+/**
+ * Inverse of `filterKey`. Used wherever a filter arrives as a string — an
+ * article's call-to-action, a query parameter — so the storefront and the
+ * server agree on one spelling of "новинки".
+ */
+export function parseFilterKey(key: string): CatalogFilter | null {
+  if (key === "all" || key === "new" || key === "sale") return { kind: key };
+  if (key.startsWith("category:")) {
+    const id = key.slice("category:".length);
+    return id ? { kind: "category", id } : null;
+  }
+  return null;
+}
+
 /** Ranks products by relevance to `query`, best match first. */
 export const searchProducts = (
   products: readonly Product[],

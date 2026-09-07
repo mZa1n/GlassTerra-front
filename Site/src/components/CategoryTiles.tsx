@@ -13,14 +13,15 @@ interface CategoryTilesProps {
 export function CategoryTiles({ categories, onSelect }: CategoryTilesProps) {
   return (
     <div className={GRID}>
-      {categories.map((category) => (
+      {categories.map((category, index) => (
         <button
           key={category.id}
           type="button"
           onClick={() => onSelect(category.id)}
-          className="group text-left"
+          style={{ animationDelay: `${Math.min(index, 8) * 45}ms` }}
+          className="animate-in fade-in slide-in-from-bottom-3 fill-mode-both group text-left duration-500"
         >
-          <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
+          <div className="relative aspect-square overflow-hidden rounded-lg bg-muted transition-shadow duration-300 group-hover:shadow-lg">
             <ImageWithFallback
               src={category.image}
               alt=""

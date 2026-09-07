@@ -21,7 +21,7 @@ export type ProductSeed = Omit<Product, "categoryName" | "images">;
  * Extra shots per category. A real catalogue stores a gallery per product;
  * until photography exists, every product borrows from its category.
  */
-const GALLERY: Record<CategoryId, string[]> = {
+const GALLERY: Record<string, string[]> = {
   glasses: [
     "photo-1565256080583-df488fd02195",
     "photo-1707340726386-611f5e9398f3",
@@ -59,14 +59,18 @@ const GALLERY: Record<CategoryId, string[]> = {
   ],
 };
 
+const GLASS = "Посуда из стекла";
+const CERAMICS = "Фарфор и керамика";
+const INTERIOR = "Интерьер";
+
 export const CATEGORIES: readonly CategorySeed[] = [
-  { id: "glasses", name: "Стаканы и стопки", image: img("photo-1565256080583-df488fd02195") },
-  { id: "mugs", name: "Чашки и кружки", image: img("photo-1669329606558-2dc9172d9f33") },
-  { id: "bowls", name: "Салатники", image: img("photo-1546069901-ba9599a7e63c") },
-  { id: "pitchers", name: "Кувшины", image: img("photo-1620877138710-e086a5f24b46") },
-  { id: "plates", name: "Тарелки", image: img("photo-1578775887804-699de7086ff9") },
-  { id: "teasets", name: "Чайные сервизы", image: img("photo-1563362014-7781f7b4f0c7") },
-  { id: "decor", name: "Декор и вазы", image: img("photo-1597696929736-6d13bed8e6a8") },
+  { id: "glasses", name: "Стаканы и стопки", group: GLASS, image: img("photo-1565256080583-df488fd02195") },
+  { id: "plates", name: "Тарелки", group: GLASS, image: img("photo-1578775887804-699de7086ff9") },
+  { id: "bowls", name: "Салатники", group: GLASS, image: img("photo-1546069901-ba9599a7e63c") },
+  { id: "pitchers", name: "Кувшины", group: GLASS, image: img("photo-1620877138710-e086a5f24b46") },
+  { id: "teasets", name: "Чайные сервизы", group: CERAMICS, image: img("photo-1563362014-7781f7b4f0c7") },
+  { id: "mugs", name: "Чашки и кружки", group: CERAMICS, image: img("photo-1669329606558-2dc9172d9f33") },
+  { id: "decor", name: "Декор и вазы", group: INTERIOR, image: img("photo-1597696929736-6d13bed8e6a8") },
 ];
 
 export const PRODUCTS: readonly ProductSeed[] = [
@@ -283,7 +287,8 @@ export const toProduct = (seed: ProductSeed): Product => {
   // Compare by photo id, not by URL: the same shot is requested at different
   // widths for the grid and the gallery, so URL equality would let it through
   // twice.
-  const extras = GALLERY[seed.category]
+  // Categories created in the admin panel have no stock gallery of their own.
+  const extras = (GALLERY[seed.category] ?? [])
     .filter((id) => !seed.image.includes(id))
     .map((id) => img(id, 1200));
 

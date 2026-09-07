@@ -40,11 +40,22 @@ duplicated, drifted product data happened the first time.
 - **Endpoint paths live only in `src/api/transport/http.ts`.**
 - **Wire-format differences are absorbed in `src/api/dto.ts`.** A backend field
   rename is a one-line change there, never a refactor across components.
-- **Product data has one source**, `src/data/products.ts`. Category ids are the
-  `CategoryId` union and catalog filters are the `CatalogFilter` tagged union,
-  so a filter cannot name a category that does not exist. Keep it that way.
+- **Product data has one source**, `src/data/products.ts` — the mock's tables
+  and the seed for the real database. News blocks live in
+  `src/data/articles.ts`, page copy in `src/data/content.ts`.
+- **Categories are created at runtime**, so `CategoryId` is `string`, not a
+  union. What the union used to guarantee is now a runtime check: the catalog
+  drops a filter naming a category the server does not return
+  (`src/pages/Catalog.tsx`). Do not hardcode category ids in components — the
+  sidebar tree is built from `Category.group`.
+- Catalog filters stay the `CatalogFilter` tagged union. `filterKey()` and
+  `parseFilterKey()` in `src/lib/catalog.ts` are the only spelling of a filter
+  as a string — the HTTP layer and article call-to-actions both use it.
 - The mock and the HTTP transport share filter and sort rules from
   `src/lib/catalog.ts` so they cannot disagree.
+- **Authorisation is server-side.** `api.admin.*` is guarded by role in both
+  transports; the `role === "admin"` checks in the UI only decide what is
+  worth drawing. Never treat a hidden button as protection.
 
 ## Styling
 

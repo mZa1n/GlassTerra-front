@@ -35,6 +35,7 @@ const NewArrivalsPage = lazy(() =>
   import("@/pages/NewArrivals").then((m) => ({ default: m.NewArrivalsPage })),
 );
 const StaticPage = lazy(() => import("@/pages/StaticPage").then((m) => ({ default: m.StaticPage })));
+const AdminPage = lazy(() => import("@/pages/Admin").then((m) => ({ default: m.AdminPage })));
 
 /** Single place that maps a route to its screen. */
 const SCREENS: Partial<Record<Page, ComponentType>> = {
@@ -47,6 +48,7 @@ const SCREENS: Partial<Record<Page, ComponentType>> = {
   profile: ProfilePage,
   news: NewsPage,
   "new-arrivals": NewArrivalsPage,
+  admin: AdminPage,
 };
 
 /** Routes that show the category rail alongside the content. */
@@ -78,7 +80,10 @@ function Shell() {
           {/* Remount on navigation so a crashed screen recovers by leaving it. */}
           <ErrorBoundary resetKey={page}>
             <Suspense fallback={<ScreenFallback />}>
-              {Screen ? <Screen /> : <StaticPage page={page} />}
+              {/* Keyed so the entrance animation replays on every navigation. */}
+              <div key={page} className="animate-in fade-in slide-in-from-bottom-3 duration-400">
+                {Screen ? <Screen /> : <StaticPage page={page} />}
+              </div>
             </Suspense>
           </ErrorBoundary>
         </main>

@@ -32,6 +32,14 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
           </DialogDescription>
         </DialogHeader>
 
+        {!usingRealBackend && (
+          <p className="rounded-lg bg-secondary p-3 text-xs text-muted-foreground">
+            Демо-аккаунты: <span className="text-foreground">user@glassterra.ru</span> / user12345
+            — покупатель, <span className="text-foreground">admin@glassterra.ru</span> / admin12345
+            — сотрудник с доступом к панели управления.
+          </p>
+        )}
+
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="w-full">
             <TabsTrigger value="login" className="flex-1">
